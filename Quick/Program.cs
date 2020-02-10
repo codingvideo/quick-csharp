@@ -7,23 +7,22 @@ namespace Quick
         static void Main(string[] args)
         {
 
-            var data = new int[] { 5, 2, 7, 4, 1, 6, 3 };
+            var data = new SwappableData( 5, 2, 7, 4, 1, 6, 3 );
             Quicksort(data, 0, data.Length-1);
-            var output = string.Join(", ", data);
-            Console.WriteLine(output);
+            Console.WriteLine(data);
         }
 
-        static void Quicksort(int[] data, int begin, int end)
+        static void Quicksort(SwappableData data, int begin, int end)
         {
             if (begin < end)
             {
                 var mid = Partition(data, begin, end);
-                Quicksort(data, begin, mid - 1);
+                Quicksort(data, begin, mid);
                 Quicksort(data, mid + 1, end);
             }
         }
 
-        static int Partition(int[] data, int begin, int end)
+        static int Partition(SwappableData data, int begin, int end)
         {
             var pivot = data[begin];
             var rightBegin = begin + 1;
@@ -32,24 +31,48 @@ namespace Quick
             {
                 if (data[i] < pivot)
                 {
-                    Swap(data, i, rightBegin);
+                    data.Swap(i, rightBegin);
                     rightBegin++;
                 }
             }
 
             var mid = rightBegin - 1;
-            Swap(data, begin, mid);
+            data.Swap(begin, mid);
             return mid;
         }
+    }
 
-        static void Swap(int[] data, int a, int b)
+    class SwappableData {
+
+        private int[] data;
+
+        public int this[int i]
         {
-            if (a != b)
-            {
+            get { return data[i]; }
+            set { data[i] = value; }
+        }
+
+        public SwappableData(params int[] nums)
+        {
+            data = nums;
+        }
+
+        public void Swap(int a, int b) {
+            if(a != b){
                 var x = data[a];
                 data[a] = data[b];
                 data[b] = x;
             }
+        }
+
+        public override string ToString()
+        { 
+            return string.Join(", ", data);
+        }
+
+        public int Length
+        {
+            get { return data.Length; }
         }
     }
 }
